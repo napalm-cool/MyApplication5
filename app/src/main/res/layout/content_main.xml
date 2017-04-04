@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.ycn.myapplication.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <EditText android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:cursorVisible="false"
+        android:editable="false"
+        android:id="@+id/editText"/>
+
+    <TextView
+        android:text="发送区："
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_above="@+id/edit_msg"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView4"
+        android:layout_alignRight="@+id/btn_Link"
+        android:layout_alignEnd="@+id/btn_Link" />
+
+    <Button
+        android:text="连接"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/btn_Link"
+        android:onClick="onClick" />
+
+    <TextView
+        android:text="add:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5"
+        android:layout_alignBaseline="@+id/ed_ip"
+        android:layout_alignBottom="@+id/ed_ip"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/ed_ip"
+        android:layout_toStartOf="@+id/ed_ip" />
+
+    <TextView
+        android:text="坐标"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/tv1"
+        android:layout_below="@+id/editText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="车踪1.0:引导模式"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:onClick="onbutton"
+        android:layout_below="@+id/tv1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/ed_ip"
+        android:text="http://27050b5f.nat123.net:25504"
+        android:singleLine="false"
+        android:layout_marginRight="19dp"
+        android:layout_marginEnd="19dp"
+        android:layout_above="@+id/btn_Link"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/btn_Link"
+        android:layout_toEndOf="@+id/btn_Link" />
+
+    <Button
+        android:text="send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_sendMsg"
+        android:onClick="onClick"
+        android:layout_alignParentBottom="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/edit_msg"
+        android:text="$CARX,1,32.238998333333335,118.771,1483722655000"
+        android:layout_above="@+id/textView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="接收区："
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:id="@+id/textView3"
+        android:layout_above="@+id/tx_receive"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/tx_receive"
+        android:layout_above="@+id/btn_sendMsg"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
