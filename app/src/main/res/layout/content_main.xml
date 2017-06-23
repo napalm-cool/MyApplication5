@@ -17,7 +17,8 @@
         android:layout_height="wrap_content"
         android:cursorVisible="false"
         android:editable="false"
-        android:id="@+id/editText"/>
+        android:id="@+id/editText"
+        android:textSize="12sp" />
 
     <TextView
         android:text="发送区："
@@ -41,7 +42,7 @@
         android:onClick="onClick" />
 
     <TextView
-        android:text="add:"
+        android:text="域名:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView5"
@@ -49,8 +50,9 @@
         android:layout_alignBottom="@+id/ed_ip"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/ed_ip"
-        android:layout_toStartOf="@+id/ed_ip" />
+        android:layout_toStartOf="@+id/ed_ip"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_alignEnd="@+id/textView3" />
 
     <TextView
         android:text="坐标"
@@ -62,14 +64,14 @@
         android:layout_alignParentStart="true" />
 
     <Button
-        android:text="车踪1.0:引导模式"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/button"
         android:onClick="onbutton"
         android:layout_below="@+id/tv1"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:text="车迹1.1引导模式" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -77,15 +79,15 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/ed_ip"
-        android:text="http://27050b5f.nat123.net:25504"
+        android:text="http://23050b6e.nat123.net:36275"
         android:singleLine="false"
         android:layout_marginRight="19dp"
         android:layout_marginEnd="19dp"
         android:layout_above="@+id/btn_Link"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/btn_Link"
-        android:layout_toEndOf="@+id/btn_Link" />
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_toRightOf="@+id/textView3" />
 
     <Button
         android:text="send"
@@ -101,7 +103,7 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/edit_msg"
-        android:text="$CARX,1,32.238998333333335,118.771,1483722655000"
+        android:text="$CARX,0000000002,32.238998333333335,118.771,1483722655000"
         android:layout_above="@+id/textView3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

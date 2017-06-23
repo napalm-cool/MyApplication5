@@ -63,7 +63,7 @@ public abstract class TcpClient implements Runnable{
             this.onConnect();
             transceiver.start(socket);
         } catch (IOException e) {
-            this.onConnectFalied();
+            this.onConnectFalied();//发送连接失败消息
             e.printStackTrace();
         }
     }

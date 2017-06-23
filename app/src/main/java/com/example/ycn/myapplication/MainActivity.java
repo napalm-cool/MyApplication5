@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,14 +27,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);//调用父创建类
+        setContentView(R.layout.activity_main);//当前视为主视图
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -78,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
         // 注意：此处更新准确度非常低，推荐在service里面启动一个Thread，在run中sleep(10000);然后执行handler.sendMessage(),更新位置
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
         ////////////////////////////////////////////////////////////////////////////////////////
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -191,9 +206,12 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "定位结束");
                     break;
             }
-        };
+        }
+
+        ;
     };
-    public String  gpssend;
+    public String gpssend;
+
     //实时更新文本内容
     private void updateView(Location location) {
         if (location != null) {
@@ -202,9 +220,9 @@ public class MainActivity extends AppCompatActivity {
             editText.append("\n纬度：");
             editText.append(String.valueOf(location.getLatitude()));*/
             //send $CARXX,主机号，主机时间，经度，纬度
-            gpssend = "$CARX,1,"+String.valueOf(location.getLatitude())+","+String.valueOf(location.getLongitude())+","+String.valueOf(location.getTime());
+            gpssend = "$CARX,0000000002," + String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getTime());
             editText.setText(gpssend);
-            if(tcpClient.isConnected()) {
+            if (tcpClient.isConnected()) {
                 new Thread() {
                     @Override
                     public void run() {
@@ -237,7 +255,8 @@ public class MainActivity extends AppCompatActivity {
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         return criteria;
     }
-/////////////////////////////////////收发信息部份////////////////////////////////////////////
+
+    /////////////////////////////////////收发信息部份////////////////////////////////////////////
     private EditText editIP;
     private EditText editMsg;
     private Button btnLink;
@@ -253,10 +272,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onConnectBreak() {
-            Log.e("6","Break");
+            Log.e("6", "Break");
             refreshUI(false);
             tcpClient.disConnected();
-         }
+        }
 
         @Override
         public void onReceive(final String s) {
@@ -264,14 +283,14 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     textReceive.append("server:" + s + "\n\n");
-                    if (s.equals("57")){
-                        context=MainActivity.this;
-                        Toast.makeText(context,"优先放行，警慎驾驶！",Toast.LENGTH_LONG).show();
+                    if (s.equals("57")) {
+                        context = MainActivity.this;
+                        Toast.makeText(context, "优先放行，警慎驾驶！", Toast.LENGTH_SHORT).show();
                         playSoundPool(R.raw.fx);
                     }
-                    if (s.equals("56")){
-                        context=MainActivity.this;
-                        Toast.makeText(context,"已进入引导区！",Toast.LENGTH_LONG).show();
+                    if (s.equals("56")) {
+                        context = MainActivity.this;
+                        Toast.makeText(context, "已进入引导区！", Toast.LENGTH_SHORT).show();
                         playSoundPool(R.raw.jr);
                     }
                 }
@@ -283,10 +302,11 @@ public class MainActivity extends AppCompatActivity {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), "连接失败",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "连接失败", Toast.LENGTH_SHORT).show();
                 }
             });
         }
+
         //发送成功的回调
         @Override
         public void onSendSuccess(final String s) {
@@ -308,50 +328,71 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 editIP.setEnabled(!isConnected);
-               // editPort.setEnabled(!isConnected);
+                // editPort.setEnabled(!isConnected);
                 btnLink.setText("");
-                btnLink.setText(isConnected  ? "断开" : "连接");
-              //  btnSend.setBackgroundResource(isConnected ?
-             //           R.drawable.send_button : R.drawable.send_button_disabled );
+                btnLink.setText(isConnected ? "断开" : "连接");
+                //  btnSend.setBackgroundResource(isConnected ?
+                //           R.drawable.send_button : R.drawable.send_button_disabled );
             }
         });
     }
 
-/*    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initView();
-        refreshUI(false);
-    }*/
-    Handler handler=new Handler();
+    /*    @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            initView();
+            refreshUI(false);
+        }*/
+    Handler handler = new Handler();
 
-    Runnable runnable=new Runnable(){
+    Runnable runnable = new Runnable() {
         @Override
         public void run() {
             // TODO Auto-generated method stub
-            Log.e("isCon", String.valueOf( tcpClient.isConnected()));
-            if(!tcpClient.isConnected()) { //如果没有连接则再次连接
+
+            //Log.e("isCon", String.valueOf(tcpClient.isConnected()));
+            if (!tcpClient.isConnected()) { //如果没有连接则再次连接
+                Toast.makeText(context, "断网重连", Toast.LENGTH_SHORT).show();
                 myCon();//连接
             }
-           //要做的事情，这里再次调用此Runnable对象，以实现每两秒实现一次的定时器操作
+            else {
+                Toast.makeText(context, "连网正常", Toast.LENGTH_SHORT).show();
+            }
+            //实现每5秒实现一次的定时器操作
             handler.postDelayed(this, 5000);
         }
     };
 
-    public void onbutton(View v){
-        context=MainActivity.this;
-        Toast.makeText(context,"5秒检查",Toast.LENGTH_LONG).show();
+    //启动连接
+    private void myCon() {
+        if (tcpClient.isConnected()) {//如果连接则断开
+            tcpClient.disConnected();
+        } else {
+            String host = editIP.getText().toString().trim();
+            tcpClient.connect(host);
+        }
+
+    }
+
+    public void onbutton(View v) {
+        context = MainActivity.this;
+        //Toast.makeText(context, "5秒检查", Toast.LENGTH_LONG).show();
         handler.postDelayed(runnable, 5000);
+        //进入地图/////////////////////////////////////////////////////////////////////////////////////////////////
+        Intent intent;
+        intent = new Intent(MainActivity.this,Main2Activity.class);
+        startActivity(intent);
+
     }
 
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_Link:
                 myCon();
                 break;
             case R.id.btn_sendMsg:
-                    //editMsg.setText("");
-                if(tcpClient.isConnected()){
+                //editMsg.setText("");
+                if (tcpClient.isConnected()) {
                     new Thread() {
                         @Override
                         public void run() {
@@ -367,37 +408,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void myCon(){
-        if(tcpClient.isConnected()){
-            tcpClient.disConnected();
-        }else {
-            String host = editIP.getText().toString().trim();
-            tcpClient.connect(host);
-        }
-
-    }
 
     @Override
     protected void onStop() {
         tcpClient.disConnected();
-        super.onStop();
+        super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.disconnect();
     }
 
     private void initView() {
         setContentView(R.layout.activity_main);
         editText = (EditText) findViewById(R.id.editText);
-        editIP = (EditText)findViewById(R.id.ed_ip);
-        editMsg = (EditText)findViewById(R.id.edit_msg);
-        btnLink = (Button)findViewById(R.id.btn_Link);
-        btnSend = (Button)findViewById(R.id.btn_sendMsg);
-        textReceive = (TextView)findViewById(R.id.tx_receive);
-         //listView = (ListView)findViewById(R.id.listView);
+        editIP = (EditText) findViewById(R.id.ed_ip);
+        editMsg = (EditText) findViewById(R.id.edit_msg);
+        btnLink = (Button) findViewById(R.id.btn_Link);
+        btnSend = (Button) findViewById(R.id.btn_sendMsg);
+        textReceive = (TextView) findViewById(R.id.tx_receive);
+        //listView = (ListView)findViewById(R.id.listView);
         //btnSend.setOnClickListener(this);
         //btnLink.setOnClickListener(this);
     }
+
     ////////////////////////////////声音部份///////////////////////////////////////////////////
     private static Context context;
-    private static SoundPool sp;;
+    private static SoundPool sp;
+    ;
     private static int soundId;
 
     public static void initSoundPool(int resId) { // 初始化声音池
@@ -427,8 +466,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void playSoundPool(int resId)
-    {
+    public void playSoundPool(int resId) {
         initSoundPool(resId);
 
         sp.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
@@ -441,7 +479,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
 
-
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
 }
